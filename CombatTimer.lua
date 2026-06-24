@@ -52,14 +52,21 @@ function CombatTimer:UpdateBackground()
 	timerFrame:SetBackdropBorderColor(0, 0, 0, borderOpacity)
 end
 
+function CombatTimer:UpdateTextStyle()
+	local settings = addon.Database:GetSettings()
+
+	timerFrame.text:SetFont(STANDARD_TEXT_FONT, settings.fontSize, "OUTLINE")
+	timerFrame.text:SetTextColor(1, 1, 1, 1)
+end
+
 function CombatTimer:UpdateSettings()
 	local settings = addon.Database:GetSettings()
 
 	self:UpdateSize()
 	self:UpdatePosition()
 	self:UpdateBackground()
+	self:UpdateTextStyle()
 
-	timerFrame.text:SetTextColor(1, 1, 1, 1)
 	timerFrame.text:SetText("00:00")
 
 	if settings.enabled then

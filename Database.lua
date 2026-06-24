@@ -10,6 +10,7 @@ local defaults = {
 	width = 96,
 	height = 32,
 	backgroundOpacity = 0.6,
+	fontSize = 16,
 }
 
 function Database:Initialize()

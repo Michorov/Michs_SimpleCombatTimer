@@ -163,6 +163,32 @@ local function RegisterBackgroundOpacitySetting(category)
 	Settings.CreateSlider(category, setting, options, "Set the combat timer background opacity.")
 end
 
+local function RegisterFontSizeSetting(category)
+	local function GetFontSize()
+		return addon.Database:GetSettings().fontSize
+	end
+
+	local function SetFontSize(value)
+		addon.Database:GetSettings().fontSize = value
+		addon.CombatTimer:UpdateTextStyle()
+	end
+
+	local setting = Settings.RegisterProxySetting(
+		category,
+		"MichsSimpleCombatTimer_FontSize",
+		Settings.VarType.Number,
+		"Font Size",
+		addon.Database:GetDefaults().fontSize,
+		GetFontSize,
+		SetFontSize
+	)
+
+	local options = Settings.CreateSliderOptions(8, 64, 1)
+	options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right)
+
+	Settings.CreateSlider(category, setting, options, "Set the combat timer text size.")
+end
+
 function Options:Initialize()
 	local category = Settings.RegisterVerticalLayoutCategory("Mich's Combat Timer")
 
@@ -177,6 +203,9 @@ function Options:Initialize()
 	RegisterWidthSetting(category)
 	RegisterHeightSetting(category)
 	RegisterBackgroundOpacitySetting(category)
+
+	RegisterSectionHeader(category, "Text")
+	RegisterFontSizeSetting(category)
 
 	Settings.RegisterAddOnCategory(category)
 end
