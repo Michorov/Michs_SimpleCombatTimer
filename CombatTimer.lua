@@ -33,9 +33,26 @@ function CombatTimer:UpdateSettings()
 	timerFrame.text:SetPoint("CENTER", timerFrame, "CENTER")
 	timerFrame.text:SetTextColor(1, 1, 1, 1)
 	timerFrame.text:SetText("00:00")
+
+	local settings = addon.Database:GetSettings()
+	if settings.enabled then
+		timerFrame:Show()
+	else
+		timerFrame:Hide()
+	end
 end
 
 function CombatTimer:Start()
+	local settings = addon.Database:GetSettings()
+	if not settings.enabled then
+		return
+	end
+
+	if ticker then
+		ticker:Cancel()
+		ticker = nil
+	end
+
 	combatStartTime = GetTime()
 	timerFrame.text:SetText("00:00")
 
