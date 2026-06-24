@@ -22,10 +22,16 @@ function CombatTimer:UpdatePosition()
 	timerFrame:SetPoint("CENTER", UIParent, "CENTER", settings.positionX, settings.positionY)
 end
 
+function CombatTimer:UpdateSize()
+	local settings = addon.Database:GetSettings()
+
+	timerFrame:SetSize(settings.width, settings.height)
+end
+
 function CombatTimer:UpdateSettings()
 	local settings = addon.Database:GetSettings()
 
-	timerFrame:SetSize(120, 40)
+	self:UpdateSize()
 	self:UpdatePosition()
 
 	timerFrame:SetBackdrop({

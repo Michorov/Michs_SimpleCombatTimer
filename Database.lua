@@ -7,6 +7,8 @@ local defaults = {
 	enabled = true,
 	positionX = 0,
 	positionY = 0,
+	width = 96,
+	height = 32,
 }
 
 function Database:Initialize()

@@ -78,12 +78,66 @@ local function RegisterPositionYSetting(category)
 	Settings.CreateSlider(category, setting, options, "Move the combat timer up or down.")
 end
 
+local function RegisterWidthSetting(category)
+	local function GetWidth()
+		return addon.Database:GetSettings().width
+	end
+
+	local function SetWidth(value)
+		addon.Database:GetSettings().width = value
+		addon.CombatTimer:UpdateSize()
+	end
+
+	local setting = Settings.RegisterProxySetting(
+		category,
+		"MichsSimpleCombatTimer_Width",
+		Settings.VarType.Number,
+		"Width",
+		addon.Database:GetDefaults().width,
+		GetWidth,
+		SetWidth
+	)
+
+	local options = Settings.CreateSliderOptions(64, 300, 1)
+	options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right)
+
+	Settings.CreateSlider(category, setting, options, "Set the combat timer width.")
+end
+
+local function RegisterHeightSetting(category)
+	local function GetHeight()
+		return addon.Database:GetSettings().height
+	end
+
+	local function SetHeight(value)
+		addon.Database:GetSettings().height = value
+		addon.CombatTimer:UpdateSize()
+	end
+
+	local setting = Settings.RegisterProxySetting(
+		category,
+		"MichsSimpleCombatTimer_Height",
+		Settings.VarType.Number,
+		"Height",
+		addon.Database:GetDefaults().height,
+		GetHeight,
+		SetHeight
+	)
+
+	local options = Settings.CreateSliderOptions(22, 120, 1)
+	options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right)
+
+	Settings.CreateSlider(category, setting, options, "Set the combat timer height.")
+end
+
 function Options:Initialize()
 	local category = Settings.RegisterVerticalLayoutCategory("Mich's Combat Timer")
 
 	RegisterEnabledSetting(category)
 	RegisterPositionXSetting(category)
 	RegisterPositionYSetting(category)
+	RegisterWidthSetting(category)
+	RegisterHeightSetting(category)
 
 	Settings.RegisterAddOnCategory(category)
 end
