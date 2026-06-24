@@ -3,6 +3,11 @@ local _, addon = ...
 local Options = {}
 addon.Options = Options
 
+local function RegisterSectionHeader(category, name)
+	local initializer = CreateSettingsListSectionHeaderInitializer(name)
+	Settings.RegisterInitializer(category, initializer)
+end
+
 local function RegisterEnabledSetting(category)
 	local function GetEnabled()
 		return addon.Database:GetSettings().enabled
@@ -133,9 +138,14 @@ end
 function Options:Initialize()
 	local category = Settings.RegisterVerticalLayoutCategory("Mich's Combat Timer")
 
+	RegisterSectionHeader(category, "General")
 	RegisterEnabledSetting(category)
+
+	RegisterSectionHeader(category, "Position")
 	RegisterPositionXSetting(category)
 	RegisterPositionYSetting(category)
+
+	RegisterSectionHeader(category, "Size")
 	RegisterWidthSetting(category)
 	RegisterHeightSetting(category)
 
