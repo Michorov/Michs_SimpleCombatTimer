@@ -10,8 +10,6 @@ local ticker
 
 function CombatTimer:Initialize()
 	timerFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
-	timerFrame:Hide()
-
 	timerFrame.text = timerFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 
 	self:UpdateSettings()
@@ -39,7 +37,6 @@ end
 
 function CombatTimer:Start()
 	combatStartTime = GetTime()
-	timerFrame:Show()
 
 	ticker = C_Timer.NewTicker(1, function()
 		self:UpdateTimerText()
