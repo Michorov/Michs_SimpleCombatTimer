@@ -54,9 +54,10 @@ end
 
 function CombatTimer:UpdateTextStyle()
 	local settings = addon.Database:GetSettings()
+	local color = CreateColorFromHexString(settings.textColor)
 
 	timerFrame.text:SetFont(STANDARD_TEXT_FONT, settings.fontSize, "OUTLINE")
-	timerFrame.text:SetTextColor(1, 1, 1, 1)
+	timerFrame.text:SetTextColor(color:GetRGBA())
 end
 
 function CombatTimer:UpdateSettings()

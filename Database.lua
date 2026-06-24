@@ -11,6 +11,7 @@ local defaults = {
 	height = 32,
 	backgroundOpacity = 0.6,
 	fontSize = 16,
+	textColor = "FFFFFFFF",
 }
 
 function Database:Initialize()

@@ -177,7 +177,7 @@ local function RegisterFontSizeSetting(category)
 		category,
 		"MichsSimpleCombatTimer_FontSize",
 		Settings.VarType.Number,
-		"Font Size",
+		"Size",
 		addon.Database:GetDefaults().fontSize,
 		GetFontSize,
 		SetFontSize
@@ -187,6 +187,29 @@ local function RegisterFontSizeSetting(category)
 	options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right)
 
 	Settings.CreateSlider(category, setting, options, "Set the combat timer text size.")
+end
+
+local function RegisterTextColorSetting(category)
+	local function GetTextColor()
+		return addon.Database:GetSettings().textColor
+	end
+
+	local function SetTextColor(value)
+		addon.Database:GetSettings().textColor = value
+		addon.CombatTimer:UpdateTextStyle()
+	end
+
+	local setting = Settings.RegisterProxySetting(
+		category,
+		"MichsSimpleCombatTimer_TextColor",
+		Settings.VarType.String,
+		"Color",
+		addon.Database:GetDefaults().textColor,
+		GetTextColor,
+		SetTextColor
+	)
+
+	Settings.CreateColorSwatch(category, setting, "Set the combat timer text color.")
 end
 
 function Options:Initialize()
@@ -206,6 +229,7 @@ function Options:Initialize()
 
 	RegisterSectionHeader(category, "Text")
 	RegisterFontSizeSetting(category)
+	RegisterTextColorSetting(category)
 
 	Settings.RegisterAddOnCategory(category)
 end
