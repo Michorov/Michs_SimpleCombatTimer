@@ -4,5 +4,6 @@
 ## Author: Mich
 ## Version: 0.1.0
 
+CombatTimer.lua
 EventHandler.lua
 Core.lua
