@@ -24,9 +24,9 @@ function EventHandler:Initialize()
 end
 
 function EventHandler:PLAYER_REGEN_DISABLED()
-	print("Combat Started")
+	addon.CombatTimer:Start()
 end
 
 function EventHandler:PLAYER_REGEN_ENABLED()
-	print("Combat Ended")
+	addon.CombatTimer:Stop()
 end
