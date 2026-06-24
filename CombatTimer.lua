@@ -37,6 +37,7 @@ end
 
 function CombatTimer:Start()
 	combatStartTime = GetTime()
+	timerFrame.text:SetText("00:00")
 
 	ticker = C_Timer.NewTicker(1, function()
 		self:UpdateTimerText()
