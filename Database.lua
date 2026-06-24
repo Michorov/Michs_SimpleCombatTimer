@@ -9,6 +9,7 @@ local defaults = {
 	positionY = 0,
 	width = 96,
 	height = 32,
+	backgroundOpacity = 0.6,
 }
 
 function Database:Initialize()

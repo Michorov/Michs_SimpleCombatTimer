@@ -135,6 +135,34 @@ local function RegisterHeightSetting(category)
 	Settings.CreateSlider(category, setting, options, "Set the combat timer height.")
 end
 
+local function RegisterBackgroundOpacitySetting(category)
+	local function GetBackgroundOpacity()
+		return addon.Database:GetSettings().backgroundOpacity
+	end
+
+	local function SetBackgroundOpacity(value)
+		addon.Database:GetSettings().backgroundOpacity = value
+		addon.CombatTimer:UpdateBackground()
+	end
+
+	local setting = Settings.RegisterProxySetting(
+		category,
+		"MichsSimpleCombatTimer_BackgroundOpacity",
+		Settings.VarType.Number,
+		"Opacity",
+		addon.Database:GetDefaults().backgroundOpacity,
+		GetBackgroundOpacity,
+		SetBackgroundOpacity
+	)
+
+	local options = Settings.CreateSliderOptions(0, 1, 0.05)
+	options:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, function(value)
+		return string.format("%d%%", math.floor(value * 100 + 0.5))
+	end)
+
+	Settings.CreateSlider(category, setting, options, "Set the combat timer background opacity.")
+end
+
 function Options:Initialize()
 	local category = Settings.RegisterVerticalLayoutCategory("Mich's Combat Timer")
 
@@ -145,9 +173,10 @@ function Options:Initialize()
 	RegisterPositionXSetting(category)
 	RegisterPositionYSetting(category)
 
-	RegisterSectionHeader(category, "Size")
+	RegisterSectionHeader(category, "Panel")
 	RegisterWidthSetting(category)
 	RegisterHeightSetting(category)
+	RegisterBackgroundOpacitySetting(category)
 
 	Settings.RegisterAddOnCategory(category)
 end
