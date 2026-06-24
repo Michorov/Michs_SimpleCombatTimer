@@ -87,7 +87,7 @@ function CombatTimer:UpdateSettings()
 	self:UpdateTextStyle()
 	self:UpdateCombatIndicator()
 
-	if settings.enabled then
+	if settings.showTimer then
 		timerFrame:Show()
 	else
 		timerFrame:Hide()
@@ -97,7 +97,7 @@ end
 
 function CombatTimer:Start()
 	local settings = addon.Database:GetSettings()
-	if not settings.enabled then
+	if not settings.showTimer then
 		return
 	end
 

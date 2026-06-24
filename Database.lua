@@ -4,7 +4,7 @@ local Database = {}
 addon.Database = Database
 
 local defaults = {
-	enabled = true,
+	showTimer = true,
 	positionX = 0,
 	positionY = 0,
 	width = 96,

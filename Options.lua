@@ -8,24 +8,24 @@ local function RegisterSectionHeader(category, name)
 	Settings.RegisterInitializer(category, initializer)
 end
 
-local function RegisterEnabledSetting(category)
-	local function GetEnabled()
-		return addon.Database:GetSettings().enabled
+local function RegisterShowTimerSetting(category)
+	local function GetShowTimer()
+		return addon.Database:GetSettings().showTimer
 	end
 
-	local function SetEnabled(value)
-		addon.Database:GetSettings().enabled = value
+	local function SetShowTimer(value)
+		addon.Database:GetSettings().showTimer = value
 		addon.CombatTimer:UpdateSettings()
 	end
 
 	local setting = Settings.RegisterProxySetting(
 		category,
-		"MichsSimpleCombatTimer_Enabled",
+		"MichsSimpleCombatTimer_ShowTimer",
 		Settings.VarType.Boolean,
-		"Enabled",
-		addon.Database:GetDefaults().enabled,
-		GetEnabled,
-		SetEnabled
+		"Show Timer",
+		addon.Database:GetDefaults().showTimer,
+		GetShowTimer,
+		SetShowTimer
 	)
 
 	Settings.CreateCheckbox(category, setting, "Show the combat timer.")
@@ -216,7 +216,7 @@ function Options:Initialize()
 	local category = Settings.RegisterVerticalLayoutCategory("Mich's Combat Timer")
 
 	RegisterSectionHeader(category, "General")
-	RegisterEnabledSetting(category)
+	RegisterShowTimerSetting(category)
 
 	RegisterSectionHeader(category, "Position")
 	RegisterPositionXSetting(category)
