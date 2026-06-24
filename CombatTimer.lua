@@ -15,10 +15,18 @@ function CombatTimer:Initialize()
 	self:UpdateSettings()
 end
 
-function CombatTimer:UpdateSettings()
-	timerFrame:SetSize(120, 40)
+function CombatTimer:UpdatePosition()
+	local settings = addon.Database:GetSettings()
+
 	timerFrame:ClearAllPoints()
-	timerFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 120)
+	timerFrame:SetPoint("CENTER", UIParent, "CENTER", settings.positionX, settings.positionY)
+end
+
+function CombatTimer:UpdateSettings()
+	local settings = addon.Database:GetSettings()
+
+	timerFrame:SetSize(120, 40)
+	self:UpdatePosition()
 
 	timerFrame:SetBackdrop({
 		bgFile = "Interface\\Buttons\\WHITE8X8",
@@ -34,7 +42,6 @@ function CombatTimer:UpdateSettings()
 	timerFrame.text:SetTextColor(1, 1, 1, 1)
 	timerFrame.text:SetText("00:00")
 
-	local settings = addon.Database:GetSettings()
 	if settings.enabled then
 		timerFrame:Show()
 	else

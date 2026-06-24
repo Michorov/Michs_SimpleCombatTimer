@@ -5,6 +5,8 @@ addon.Database = Database
 
 local defaults = {
 	enabled = true,
+	positionX = 0,
+	positionY = 0,
 }
 
 function Database:Initialize()
