@@ -10,6 +10,7 @@ addonInitializerFrame:SetScript("OnEvent", function(self, event, loadedAddonName
 		return
 	end
 
+	addon.Database:Initialize()
 	addon.CombatTimer:Initialize()
 	addon.EventHandler:Initialize()
 
