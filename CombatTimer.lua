@@ -4,6 +4,7 @@ local CombatTimer = {}
 addon.CombatTimer = CombatTimer
 
 local timerFrame
+local combatIndicatorFrame
 
 local combatStartTime
 local ticker
@@ -18,7 +19,16 @@ function CombatTimer:Initialize()
 		edgeSize = 1,
 	})
 
+	timerFrame.text:SetText("00:00")
 	timerFrame.text:SetPoint("CENTER", timerFrame, "CENTER")
+
+	combatIndicatorFrame = CreateFrame("Frame", nil, timerFrame, "BackdropTemplate")
+	combatIndicatorFrame:SetBackdrop({
+		edgeFile = "Interface\\Buttons\\WHITE8X8",
+		edgeSize = 1,
+	})
+	combatIndicatorFrame:SetBackdropBorderColor(0.55, 0, 0, 1)
+	combatIndicatorFrame:Hide()
 
 	self:UpdateSettings()
 end
@@ -43,6 +53,7 @@ function CombatTimer:UpdateBackground()
 	if backgroundOpacity <= 0 then
 		timerFrame:SetBackdropColor(0, 0, 0, 0)
 		timerFrame:SetBackdropBorderColor(0, 0, 0, 0)
+		combatIndicatorFrame:SetBackdropBorderColor(0.55, 0, 0, 0)
 		return
 	end
 
@@ -50,6 +61,7 @@ function CombatTimer:UpdateBackground()
 
 	timerFrame:SetBackdropColor(0, 0, 0, backgroundOpacity)
 	timerFrame:SetBackdropBorderColor(0, 0, 0, borderOpacity)
+	combatIndicatorFrame:SetBackdropBorderColor(0.55, 0, 0, borderOpacity)
 end
 
 function CombatTimer:UpdateTextStyle()
@@ -60,6 +72,12 @@ function CombatTimer:UpdateTextStyle()
 	timerFrame.text:SetTextColor(color:GetRGBA())
 end
 
+function CombatTimer:UpdateCombatIndicator()
+	combatIndicatorFrame:ClearAllPoints()
+	combatIndicatorFrame:SetPoint("TOPLEFT", timerFrame, "TOPLEFT", 1, -1)
+	combatIndicatorFrame:SetPoint("BOTTOMRIGHT", timerFrame, "BOTTOMRIGHT", -1, 1)
+end
+
 function CombatTimer:UpdateSettings()
 	local settings = addon.Database:GetSettings()
 
@@ -67,13 +85,13 @@ function CombatTimer:UpdateSettings()
 	self:UpdatePosition()
 	self:UpdateBackground()
 	self:UpdateTextStyle()
-
-	timerFrame.text:SetText("00:00")
+	self:UpdateCombatIndicator()
 
 	if settings.enabled then
 		timerFrame:Show()
 	else
 		timerFrame:Hide()
+		combatIndicatorFrame:Hide()
 	end
 end
 
@@ -90,6 +108,7 @@ function CombatTimer:Start()
 
 	combatStartTime = GetTime()
 	timerFrame.text:SetText("00:00")
+	combatIndicatorFrame:Show()
 
 	ticker = C_Timer.NewTicker(1, function()
 		self:UpdateTimerText()
@@ -102,6 +121,7 @@ function CombatTimer:Stop()
 	end
 
 	self:UpdateTimerText()
+	combatIndicatorFrame:Hide()
 
 	ticker:Cancel()
 	ticker = nil
