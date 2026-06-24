@@ -8,4 +8,5 @@
 Database.lua
 CombatTimer.lua
 EventHandler.lua
+Options.lua
 Core.lua

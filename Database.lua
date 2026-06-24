@@ -22,3 +22,7 @@ end
 function Database:GetSettings()
 	return self.settings
 end
+
+function Database:GetDefaults()
+	return defaults
+end
