@@ -10,8 +10,6 @@ addonInitializerFrame:SetScript("OnEvent", function(self, event, loadedAddonName
 		return
 	end
 
-	addon.PixelPerfect = LibStub("MichsPixelPerfectLib-1.0"):CreateScaler()
-
 	addon.Database:Initialize()
 	addon.CombatTimer:Initialize()
 	addon.EventHandler:Initialize()
