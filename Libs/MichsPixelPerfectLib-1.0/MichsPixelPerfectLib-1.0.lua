@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "MichsPixelPerfectLib-1.0", 2
+local MAJOR, MINOR = "MichsPixelPerfectLib-1.0", 3
 
 assert(LibStub, MAJOR .. " requires LibStub")
 
@@ -67,20 +67,21 @@ local function ToRawUI(pixelCount)
 	return (pixelCount or 0) * GetPixelStep()
 end
 
-local function RunUpdateCallbacks(scaler, event)
+local function RunUpdateCallbacks(scaler, updateEvent)
 	local updateCallbacks = scaler.updateCallbacks
 	if not updateCallbacks then
 		return
 	end
 
-	for callback in pairs(updateCallbacks) do
-		callback(scaler, event)
+	for index = 1, #updateCallbacks do
+		local callback = updateCallbacks[index]
+		callback(updateEvent)
 	end
 end
 
-local function RunAllUpdateCallbacks(event)
+local function RunAllUpdateCallbacks(updateEvent)
 	for scaler in pairs(activeScalers) do
-		RunUpdateCallbacks(scaler, event)
+		RunUpdateCallbacks(scaler, updateEvent)
 	end
 end
 
@@ -115,9 +116,9 @@ function Scaler:RegisterForUpdate(callback)
 	end
 
 	self.updateCallbacks = self.updateCallbacks or {}
-	self.updateCallbacks[callback] = true
+	self.updateCallbacks[#self.updateCallbacks + 1] = callback
 
-	callback(self, "REGISTERED")
+	callback("REGISTERED")
 end
 
 function Scaler:ToUI(pixelCount)
