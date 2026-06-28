@@ -37,6 +37,8 @@ function CombatTimer:UpdateSize()
 		edgeFile = "Interface\\Buttons\\WHITE8X8",
 		edgeSize = PP:ToUIScaled(1),
 	})
+
+	self:UpdateBackground()
 end
 
 function CombatTimer:UpdateBackground()
