@@ -5,6 +5,9 @@
 ## Version: 1.0.1
 ## SavedVariables: MichsSimpleCombatTimerDB
 
+Libs/LibStub/LibStub.lua
+Libs/MichsPixelPerfectLib-1.0/MichsPixelPerfectLib-1.0.lua
+
 Database.lua
 CombatTimer.lua
 EventHandler.lua
