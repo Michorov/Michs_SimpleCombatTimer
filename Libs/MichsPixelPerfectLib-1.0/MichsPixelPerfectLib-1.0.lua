@@ -1,4 +1,4 @@
-local MAJOR, MINOR = "MichsPixelPerfectLib-1.0", 1
+local MAJOR, MINOR = "MichsPixelPerfectLib-1.0", 2
 
 assert(LibStub, MAJOR .. " requires LibStub")
 
@@ -13,9 +13,28 @@ local Scaler = MichsPixelPerfect.Scaler or {}
 MichsPixelPerfect.Scaler = Scaler
 Scaler.__index = Scaler
 
+local activeScalers = MichsPixelPerfect.activeScalers or setmetatable({}, { __mode = "k" })
+MichsPixelPerfect.activeScalers = activeScalers
+
+local function RefreshPixelGrid()
+	local _, physicalHeight = GetPhysicalScreenSize()
+	local uiScale = UIParent and UIParent:GetEffectiveScale()
+
+	if type(physicalHeight) ~= "number" or physicalHeight <= 0 then
+		physicalHeight = 1080
+	end
+
+	if type(uiScale) ~= "number" or uiScale <= 0 then
+		uiScale = 1
+	end
+
+	local pixelScale = 768 / physicalHeight
+	cachedPixelStep = pixelScale / uiScale
+end
+
 local function GetPixelStep()
 	if not cachedPixelStep then
-		MichsPixelPerfect:RefreshPixelGrid()
+		RefreshPixelGrid()
 	end
 	return cachedPixelStep
 end
@@ -39,32 +58,41 @@ local function ScaleToResolution(value)
 	return (value or 0) / step
 end
 
-function MichsPixelPerfect:RefreshPixelGrid()
-	local _, physicalHeight = GetPhysicalScreenSize()
-	local uiScale = UIParent and UIParent:GetEffectiveScale()
+local function ToPixels(uiUnits)
+	local step = GetPixelStep()
+	return RoundToNearestInt((uiUnits or 0) / step)
+end
 
-	if type(physicalHeight) ~= "number" or physicalHeight <= 0 then
-		physicalHeight = 1080
+local function ToRawUI(pixelCount)
+	return (pixelCount or 0) * GetPixelStep()
+end
+
+local function RunUpdateCallbacks(scaler, event)
+	local updateCallbacks = scaler.updateCallbacks
+	if not updateCallbacks then
+		return
 	end
 
-	if type(uiScale) ~= "number" or uiScale <= 0 then
-		uiScale = 1
+	for callback in pairs(updateCallbacks) do
+		callback(scaler, event)
 	end
+end
 
-	local pixelScale = 768 / physicalHeight
-	cachedPixelStep = pixelScale / uiScale
+local function RunAllUpdateCallbacks(event)
+	for scaler in pairs(activeScalers) do
+		RunUpdateCallbacks(scaler, event)
+	end
 end
 
 function MichsPixelPerfect:CreateScaler()
 	local scaler = {
 		globalScale = 1,
+		updateCallbacks = {},
 	}
 
-	return setmetatable(scaler, Scaler)
-end
+	activeScalers[scaler] = true
 
-function Scaler:RefreshPixelGrid()
-	MichsPixelPerfect:RefreshPixelGrid()
+	return setmetatable(scaler, Scaler)
 end
 
 function Scaler:SetGlobalScale(value)
@@ -72,7 +100,24 @@ function Scaler:SetGlobalScale(value)
 		return
 	end
 
-	self.globalScale = math.min(2, math.max(0.5, value))
+	local nextGlobalScale = math.min(2, math.max(0.5, value))
+	if self.globalScale == nextGlobalScale then
+		return
+	end
+
+	self.globalScale = nextGlobalScale
+	RunUpdateCallbacks(self, "GLOBAL_SCALE_CHANGED")
+end
+
+function Scaler:RegisterForUpdate(callback)
+	if type(callback) ~= "function" then
+		return
+	end
+
+	self.updateCallbacks = self.updateCallbacks or {}
+	self.updateCallbacks[callback] = true
+
+	callback(self, "REGISTERED")
 end
 
 function Scaler:ToUI(pixelCount)
@@ -82,6 +127,12 @@ function Scaler:ToUI(pixelCount)
 	return roundedPixels * GetPixelStep()
 end
 
+function Scaler:ToUIScaled(value)
+	local scaledToResolutionPixels = ScaleToResolution(value)
+
+	return self:ToUI(scaledToResolutionPixels)
+end
+
 function Scaler:ScaleFont(size)
 	local scaledFontSize = Scale(self, size)
 	local roundedFontSize = RoundToNearestInt(scaledFontSize)
@@ -89,8 +140,38 @@ function Scaler:ScaleFont(size)
 	return math.max(1, roundedFontSize)
 end
 
-function Scaler:ToUIScaled(value)
-	local scaledToResolutionPixels = ScaleToResolution(value)
+function Scaler:CenterElement(element, parent, offsetX, offsetY)
+	parent = parent or UIParent
 
-	return self:ToUI(scaledToResolutionPixels)
+	if not element or not parent then
+		return
+	end
+
+	local parentWidthPx = ToPixels(parent:GetWidth())
+	local parentHeightPx = ToPixels(parent:GetHeight())
+	local elementWidthPx = ToPixels(element:GetWidth())
+	local elementHeightPx = ToPixels(element:GetHeight())
+	local offsetXPx = ToPixels(offsetX)
+	local offsetYPx = ToPixels(offsetY)
+	local leftPx = RoundToNearestInt(((parentWidthPx - elementWidthPx) / 2) + offsetXPx)
+	local bottomPx = RoundToNearestInt(((parentHeightPx - elementHeightPx) / 2) + offsetYPx)
+
+	element:ClearAllPoints()
+	element:SetPoint("BOTTOMLEFT", parent, "BOTTOMLEFT", ToRawUI(leftPx), ToRawUI(bottomPx))
 end
+
+local pixelGridEventFrame = CreateFrame("Frame")
+pixelGridEventFrame:RegisterEvent("ADDON_LOADED")
+pixelGridEventFrame:RegisterEvent("PLAYER_LOGIN")
+pixelGridEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+pixelGridEventFrame:RegisterEvent("UI_SCALE_CHANGED")
+pixelGridEventFrame:RegisterEvent("DISPLAY_SIZE_CHANGED")
+pixelGridEventFrame:SetScript("OnEvent", function(_, event)
+	RefreshPixelGrid()
+
+	if event ~= "ADDON_LOADED" then
+		RunAllUpdateCallbacks(event)
+	end
+end)
+
+RefreshPixelGrid()

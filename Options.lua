@@ -91,6 +91,7 @@ local function RegisterWidthSetting(category)
 	local function SetWidth(value)
 		addon.Database:GetSettings().width = value
 		addon.CombatTimer:UpdateSize()
+		addon.CombatTimer:UpdatePosition()
 	end
 
 	local setting = Settings.RegisterProxySetting(
@@ -117,6 +118,7 @@ local function RegisterHeightSetting(category)
 	local function SetHeight(value)
 		addon.Database:GetSettings().height = value
 		addon.CombatTimer:UpdateSize()
+		addon.CombatTimer:UpdatePosition()
 	end
 
 	local setting = Settings.RegisterProxySetting(

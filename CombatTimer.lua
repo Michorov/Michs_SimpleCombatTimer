@@ -15,35 +15,28 @@ function CombatTimer:Initialize()
 	timerFrame = CreateFrame("Frame", nil, UIParent, "BackdropTemplate")
 	timerFrame.text = timerFrame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 
-	timerFrame:SetBackdrop({
-		bgFile = "Interface\\Buttons\\WHITE8X8",
-		edgeFile = "Interface\\Buttons\\WHITE8X8",
-		edgeSize = PP:ToUIScaled(1),
-	})
-
 	timerFrame.text:SetText("00:00")
 	timerFrame.text:SetPoint("CENTER", timerFrame, "CENTER")
 
-	self:UpdateSettings()
+	PP:RegisterForUpdate(function()
+		self:UpdateSettings()
+	end)
 end
 
 function CombatTimer:UpdatePosition()
 	local settings = addon.Database:GetSettings()
-
-	timerFrame:ClearAllPoints()
-	timerFrame:SetPoint(
-		"BOTTOMLEFT",
-		UIParent,
-		"BOTTOMLEFT",
-		PP:ToUIScaled(settings.positionX),
-		PP:ToUIScaled(settings.positionY)
-	)
+	PP:CenterElement(timerFrame, UIParent, PP:ToUIScaled(settings.positionX), PP:ToUIScaled(settings.positionY))
 end
 
 function CombatTimer:UpdateSize()
 	local settings = addon.Database:GetSettings()
 
 	timerFrame:SetSize(PP:ToUIScaled(settings.width), PP:ToUIScaled(settings.height))
+	timerFrame:SetBackdrop({
+		bgFile = "Interface\\Buttons\\WHITE8X8",
+		edgeFile = "Interface\\Buttons\\WHITE8X8",
+		edgeSize = PP:ToUIScaled(1),
+	})
 end
 
 function CombatTimer:UpdateBackground()
