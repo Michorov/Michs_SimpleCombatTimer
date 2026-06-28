@@ -3,6 +3,7 @@
 ## Notes: Shows a simple timer while you are in combat.
 ## Author: Mich
 ## Version: 1.0.3
+## X-License: MIT
 ## SavedVariables: MichsSimpleCombatTimerDB
 
 Libs/LibStub/LibStub.lua
