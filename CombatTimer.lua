@@ -70,7 +70,6 @@ function CombatTimer:UpdateSettings()
 
 	self:UpdateSize()
 	self:UpdatePosition()
-	self:UpdateBackground()
 	self:UpdateTextStyle()
 
 	if settings.showTimer then
