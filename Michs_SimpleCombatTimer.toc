@@ -1,5 +1,6 @@
 ## Interface: 120007, 120100
 ## Title: Mich's Simple Combat Timer
+## Category: Mich's Toolkit
 ## Notes: Shows a simple timer while you are in combat.
 ## Author: Mich
 ## Version: 1.0.5
