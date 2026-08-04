@@ -9,9 +9,12 @@
 
 Libs/LibStub/LibStub.lua
 Libs/MichsPixelPerfectLib-1.0/MichsPixelPerfectLib-1.0.lua
+Libs/MichsOptionsUILib-1.0/MichsOptionsUILib-1.0.xml
 
 Database.lua
 CombatTimer.lua
 EventHandler.lua
 Options.lua
+Options/Pages/General.lua
+Options/Options.lua
 Core.lua
