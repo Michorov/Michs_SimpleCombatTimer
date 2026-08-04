@@ -3,7 +3,7 @@
 ## Category: Mich's Toolkit
 ## Notes: Shows a simple timer while you are in combat.
 ## Author: Mich
-## Version: 1.0.5
+## Version: 1.0.6
 ## X-License: MIT
 ## SavedVariables: MichsSimpleCombatTimerDB
 
