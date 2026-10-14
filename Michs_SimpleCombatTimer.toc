@@ -6,6 +6,7 @@
 ## Version: 1.0.6
 ## X-License: MIT
 ## SavedVariables: MichsSimpleCombatTimerDB
+## IconTexture: Interface\AddOns\Michs_SimpleCombatTimer\Media\LogoIcon.png
 
 Libs/LibStub/LibStub.lua
 Libs/MichsPixelPerfectLib-1.0/MichsPixelPerfectLib-1.0.lua
