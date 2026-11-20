@@ -3,7 +3,7 @@ local _, addon = ...
 local CombatTimer = {}
 addon.CombatTimer = CombatTimer
 
-addon.PixelPerfect = LibStub("MichsPixelPerfectLib-1.0"):CreateScaler()
+addon.PixelPerfect = LibStub("MichsPixelPerfectLib-2.0"):CreateScaler()
 local PP = addon.PixelPerfect
 
 local timerFrame
@@ -25,17 +25,17 @@ end
 
 function CombatTimer:UpdatePosition()
 	local settings = addon.Database:GetSettings()
-	PP:CenterElement(timerFrame, UIParent, PP:ToUIScaled(settings.positionX), PP:ToUIScaled(settings.positionY))
+	PP:CenterElement(timerFrame, UIParent, settings.positionX, settings.positionY)
 end
 
 function CombatTimer:UpdateSize()
 	local settings = addon.Database:GetSettings()
 
-	timerFrame:SetSize(PP:ToUIScaled(settings.width), PP:ToUIScaled(settings.height))
+	timerFrame:SetSize(PP:ToUI(settings.width), PP:ToUI(settings.height))
 	timerFrame:SetBackdrop({
 		bgFile = "Interface\\Buttons\\WHITE8X8",
 		edgeFile = "Interface\\Buttons\\WHITE8X8",
-		edgeSize = PP:ToUIScaled(1),
+		edgeSize = PP:ToUI(1),
 	})
 
 	self:UpdateBackground()
@@ -61,7 +61,7 @@ function CombatTimer:UpdateTextStyle()
 	local settings = addon.Database:GetSettings()
 	local color = CreateColorFromHexString(settings.textColor)
 
-	timerFrame.text:SetFont(STANDARD_TEXT_FONT, PP:ScaleFont(settings.fontSize), "OUTLINE")
+	timerFrame.text:SetFont(STANDARD_TEXT_FONT, PP:ToUI(settings.fontSize), "OUTLINE")
 	timerFrame.text:SetTextColor(color:GetRGBA())
 end
 
